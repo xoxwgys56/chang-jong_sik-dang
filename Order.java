@@ -1,76 +1,86 @@
 package chang_jong;
 
 import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Toolkit;
 
-import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.LineBorder;
 
 public class Order extends JPanel {
-	
-	protected JPanel panel, panel_1;
-	protected JList list, list_1, list_2; // 주문명, 수량, 가격
-	protected JLabel lblNewLabel, lblNewLabel_1, lblNewLabel_2;
-	protected JButton btnNewButton, btnNewButton_1, btnNewButton_2;
+
 	public Order() {
+		Dimension res = Toolkit.getDefaultToolkit().getScreenSize();
+		int wid=(res.width/4);				//주문 패널 넓이
+		int hei=((res.height/10)*9);			//주문 패널 높이
+		setBorder(new LineBorder(new Color(0, 0, 0)));
 		setLayout(null);
+		setSize(wid, hei);
+		JPanel ListPanel = new JPanel();			//리스트들 들어가 있는 패널
+		ListPanel.setBounds(0,0, wid, (hei/5)*4);
+		add(ListPanel);
+		ListPanel.setLayout(null);
 		
-		panel = new JPanel();
-		panel.setBounds(0, 0, 420, 390);
-		add(panel);
-		panel.setLayout(null);
+		JLabel NameLabel = new JLabel("주문명");			//음식명라벨
+		NameLabel.setBounds(0, 0, wid/2, 20);
+		NameLabel.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
+		ListPanel.add(NameLabel);
+
+		JLabel NumLabel = new JLabel("수량");				//수량라벨
+		NumLabel.setBounds(wid/2, 0, wid/4, 20);
+		NumLabel.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
+		ListPanel.add(NumLabel);
 		
-		list = new JList(new DefaultListModel());
-		list.setBorder(new LineBorder(new Color(0, 0, 0)));
-		list.setBounds(12, 29, 220, 351);
-		panel.add(list);
+		JLabel PriceLabel = new JLabel("가격");			//가격라벨
+		PriceLabel.setBounds((wid/2)+(wid/4), 0, wid/4, 20);
+		PriceLabel.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
+		ListPanel.add(PriceLabel);
 		
-		list_1 = new JList(new DefaultListModel());
-		list_1.setBorder(new LineBorder(new Color(0, 0, 0)));
-		list_1.setBounds(233, 29, 63, 351);
-		panel.add(list_1);
+		JList NameList = new JList();					//음식명 리스트							//여기부터 ------------------------------------------------------
+		NameList.setBounds(0, 20, wid/2, (hei/5)*4-20-hei/5/2);
+		NameList.setBorder(new LineBorder(new Color(0, 0, 0)));
+		ListPanel.add(NameList);
 		
-		list_2 = new JList(new DefaultListModel());
-		list_2.setBorder(new LineBorder(new Color(0, 0, 0)));
-		list_2.setBounds(297, 29, 111, 351);
-		panel.add(list_2);
+		JList NumList = new JList();					//수량 리스트
+		NumList.setBounds(wid/2, 20, wid/4, (hei/5)*4-20-hei/5/2);
+		NumList.setBorder(new LineBorder(new Color(0, 0, 0)));
+		ListPanel.add(NumList);
 		
-		lblNewLabel = new JLabel("\uC8FC\uBB38\uBA85");
-		lblNewLabel.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
-		lblNewLabel.setLabelFor(list);
-		lblNewLabel.setBounds(12, 14, 220, 15);
-		panel.add(lblNewLabel);
+		JList PriceList = new JList();					//가격 리스트
+		PriceList.setBounds((wid/2)+(wid/4), 20, wid/4, (hei/5)*4-20-hei/5/2);
+		PriceList.setBorder(new LineBorder(new Color(0, 0, 0)));
+		ListPanel.add(PriceList);
 		
-		lblNewLabel_1 = new JLabel("\uC218\uB7C9");
-		lblNewLabel_1.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
-		lblNewLabel_1.setBounds(233, 14, 63, 15);
-		panel.add(lblNewLabel_1);
+		JLabel TotalLabel = new JLabel("총 가격  : ");			//가격라벨								
+		TotalLabel.setBounds(0, (hei/5)*4-hei/5/2, wid/4, hei/5/2);
+		ListPanel.add(TotalLabel);
 		
-		lblNewLabel_2 = new JLabel("\uAC00\uACA9");
-		lblNewLabel_2.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
-		lblNewLabel_2.setBounds(297, 14, 111, 15);
-		panel.add(lblNewLabel_2);
+		JTextField TotalText = new JTextField();			//가격 텍스트 필드
+		TotalText.setBounds(wid/4, (hei/5)*4-hei/5/2, wid/4*3, hei/5/2);
+		TotalText.setEditable(false);
+		ListPanel.add(TotalText);																//여기까지가 수정한 내용---------------------------------------------
 		
-		panel_1 = new JPanel();
-		panel_1.setBounds(0, 390, 420, 105);
-		add(panel_1);
-		panel_1.setLayout(null);
+		JPanel ButtonPanel = new JPanel();				//버튼 패널
+		ButtonPanel.setBounds(0, (hei/5)*4, wid, hei/5);
+		add(ButtonPanel);
+		ButtonPanel.setLayout(null);
 		
-		btnNewButton = new JButton("\uCDE8\uC18C");
-		btnNewButton.setBounds(12, 10, 201, 39);
-		panel_1.add(btnNewButton);
+		JButton CancelButton = new JButton("취소");
+		CancelButton.setBounds(0, 0, wid/2, hei/5/2);
+		ButtonPanel.add(CancelButton);
 		
-		btnNewButton_1 = new JButton("\uCD08\uAE30\uD654");
-		btnNewButton_1.setBounds(225, 10, 183, 39);
-		panel_1.add(btnNewButton_1);
+		JButton ResetButton = new JButton("초기화");
+		ResetButton.setBounds(wid/2, 0, wid/2, hei/5/2);
+		ButtonPanel.add(ResetButton);
 		
-		btnNewButton_2 = new JButton("\uACC4\uC0B0");
-		btnNewButton_2.setBounds(12, 56, 396, 39);
-		panel_1.add(btnNewButton_2);
+		JButton CalButton = new JButton("계산");
+		CalButton.setBounds(0, hei/5/2, wid, hei/5/2);
+		ButtonPanel.add(CalButton);
 
 	}
 	
