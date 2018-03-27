@@ -1,31 +1,91 @@
+package chang_jong;
 import java.awt.GridLayout;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
+import javax.swing.DefaultListModel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 
-public class MenuPanel extends JPanel implements ListSelectionListener {
+public class MenuPanel extends JPanel {
 	
-	JList menulist,paylist;
-	String[] menu = {"ëŒì†¥ë°¥","ë¶ˆê³ ê¸°ë°±ë°˜","ê°„ì¥ê²Œì¥ë°±ë°˜","ìƒì„ êµ¬ì´ë°±ë°˜","ëœì¥ì°Œê°œë°±ë°˜",
-					 "ë°±ë°˜","ë„ë£¨ë¬µì°œ","ê¹€ì¹˜ì „ê³¨","ê°€ìë¯¸íšŒë¬´ì¹¨","ì œìœ¡ë³¶ìŒ","ë‘ë¶€ì „ê³¨","ì†Œì£¼","ë§¥ì£¼","ìŒë£Œìˆ˜","ê³µê¸°ë°¥"};
-	String[] pay = {"12000", "10000", "9000", "9000", "7000", "6000", "30000", "30000", "25000", 
-					"25000", "15000", "4000", "4000", "2000", "1000"};
-	JScrollPane scrollPane, scrollPane2;
+	protected JList menulist,paylist;
+	private String[] menu = {"µ¹¼Ü¹ä","ºÒ°í±â¹é¹İ","°£Àå°ÔÀå¹é¹İ","»ı¼±±¸ÀÌ¹é¹İ","µÈÀåÂî°³¹é¹İ",
+			 "¹é¹İ","µµ·ç¹¬Âò","±èÄ¡Àü°ñ","°¡ÀÚ¹ÌÈ¸¹«Ä§","Á¦À°ººÀ½","µÎºÎÀü°ñ","¼ÒÁÖ","¸ÆÁÖ","À½·á¼ö","°ø±â¹ä"};
+	private String[] pay = {"12000", "10000", "9000", "9000", "7000", "6000", "30000", "30000", "25000", 
+			"25000", "15000", "4000", "4000", "2000", "1000"};
+	private JScrollPane scrollPane, scrollPane2;
 	
-	MenuPanel() {
-	/*	Vector<String> vector = new Vector();
-		for ( int i = 0; i < menu.length ; i++) {
-			vector.add(menu[i] + "\t\t\t" + pay[i]);
-		}*/
+	private Order orderpanel;
+	private JList ordername, ordernum, orderpay; // ÁÖ¹®¸í, ¼ö·®, °¡°İ
+	private DefaultListModel mlistmodel, plistmodel, namemodel, nummodel, paymodel;
 
+
+	MenuPanel(Order order) {
 		menulist = new JList(menu);
 		paylist = new JList(pay);
+	
 		menulist.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		menulist.setVisibleRowCount(20);
+
+		// ÁÖ¹®ÆĞ³Î °´Ã¼ ÂüÁ¶
+		orderpanel = order;
+		ordername = orderpanel.list;
+		ordernum = orderpanel.list_1;
+		orderpay = orderpanel.list_2;
+		
+		menulist.addMouseListener(new MouseAdapter() {
+		    public void mouseClicked(MouseEvent evt) {
+		        JList list = (JList)evt.getSource();
+		        // Ã³À½ ´õºíÅ¬¸¯ ½Ã ÁÖ¹® Ãß°¡, ÀÌÈÄ ÇÑ¹ø Å¬¸¯¸¸À¸·Î µ¿ÀÏ¸Ş´º Ãß°¡ °¡´É
+		        if (evt.getClickCount() >= 2) {
+		        	// ¸®½ºÆ® ¾ÆÀÌÅÛ ¹Ş±â
+		        	namemodel = (DefaultListModel) ordername.getModel();
+		        	nummodel  = (DefaultListModel) ordernum.getModel();
+		        	paymodel  = (DefaultListModel) orderpay.getModel();
+		        	
+		        	// Å¬¸¯ÇÑ ¾ÆÀÌÅÛ ÀÌ¸§, °¡°İ ÀúÀå
+		        	String menuname = (String)list.getSelectedValue();
+		        	String menupay = pay[list.getSelectedIndex()]; // ÀÌ¸§¿¡ ÇØ´çÇÏ´Â ÀÎµ¦½º ÂüÁ¶
+		        	
+		        	// ¸Ş´º Áßº¹ °Ë»ç
+		        	int i;
+		        	for ( i = 0; i < namemodel.getSize() ; i++ ) {
+		        		
+		        		// °°Àº ¸Ş´º°¡ ÀÖ´Ù¸é
+		        		if ( namemodel.get(i).equals(menuname)) {
+		        			
+		        			System.out.println("°°Àº¸Ş´º¹ß°ß");
+		        			String selectnum = (String)nummodel.get(i); // ¼ıÀÚ¿­ ÀúÀå
+		        			int selectnumi = Integer.parseInt(selectnum) + 1; // ¼ıÀÚ¿­ Á¤¼ö·Î º¯È¯ÈÄ 1Áõ°¡
+		        			
+		        			// ¸®½ºÆ® ¼öÁ¤
+		        			nummodel.remove(i);
+		        			nummodel.insertElementAt(Integer.toString(selectnumi), i); 
+		        			
+		        			String selectpay = (String)paymodel.get(i); // °¡°İ ¼ıÀÚ¿­ ÀúÀå
+		        			// ±âÁ¸ °¡°İ + (±âÁ¸°¡°İ/¼ö·®  == 1ÀÎºĞ) °ª ÀúÀå
+		        			int selectpayi = Integer.parseInt(selectpay) + (Integer.parseInt(selectpay)/Integer.parseInt(selectnum));
+		        			
+		        			// ¸®½ºÆ® ¼öÁ¤
+		        			paymodel.remove(i);
+		        			paymodel.insertElementAt(Integer.toString(selectpayi), i);
+		        			
+		        			return; // µ¿ÀÛ ¿Ï·á
+		        		}
+		        	}
+		        	// ÁÖ¹®¼­¿¡ ÇØ´ç ¸Ş´º°¡ ¾ø´Ù¸é
+		        	namemodel.insertElementAt(menuname, i);
+		        	nummodel.insertElementAt("1", i);
+		        	paymodel.insertElementAt(menupay, i);
+ 		        	ordername.setModel(namemodel);
+		        	ordernum.setModel(nummodel);
+		        	orderpay.setModel(paymodel);
+		        } 
+		    }
+		});
 		paylist.setEnabled(false);
 		paylist.setVisibleRowCount(20);
 		
@@ -37,12 +97,5 @@ public class MenuPanel extends JPanel implements ListSelectionListener {
 		add(scrollPane2);
 	}
 	
-	@Override
-	public void valueChanged(ListSelectionEvent e) {
-		if (menulist.getSelectedIndex() == -1) { //getSelectedIndex() : ì„ íƒí•œ í•­ëª© ì¸ë±ìŠ¤ ê°’ ë°˜í™˜
-			//ì„ íƒì´ ë˜ì§€ ì•Šì€ ê²½ìš°
-		} else { //ì„ íƒë˜ì§€ ì•Šì€ ê²½ìš° â€“1ì„ ë°˜í™˜í•œë‹¤.
-			//ì„ íƒì´ ëœ ê²½ìš°
-		}
-	}
+	
 }
